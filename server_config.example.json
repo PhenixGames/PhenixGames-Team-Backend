@@ -1,0 +1,28 @@
+{
+    "sessionSecret": "",
+    "domain": "",
+    "port": "",
+    "database": {
+      "host": "",
+      "user": "",
+      "password": "",
+      "database": "",
+      "charset": ""
+    },
+    "env": "",
+    "bcrypt": {
+      "saltRounds": 0
+    },
+    "server": "Backend",
+    "mainrouting": "/api",
+    "routing": {
+      "team": {
+        "main": "/team",
+        "getuser": "/getuser",
+        "login": {
+          "signin": "/signin"
+        }
+      },
+      "user": {}
+    }
+  }

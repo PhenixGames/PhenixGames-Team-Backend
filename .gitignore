@@ -1,0 +1,11 @@
+# NODE MODULES
+node_modules/
+
+# PRIVATE ENV FILE
+.env
+
+# PRIVATE CONFIG FILE
+server_config.json
+
+#LOG FILES
+log/
