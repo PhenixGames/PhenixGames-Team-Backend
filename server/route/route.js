@@ -35,14 +35,16 @@ module.exports = (app) => {
         } connected Team with IP: `, req.ip);
 
         var obj = {};
-        getuser.getUser(req, true, (result) => {
-            obj = result;
+        getuser.getUser(req, true, async (result) => {
+            obj = await result;
+            
+            if (!obj) {
+                res.status(Status.STATUS_NO_CONTENT).send(false);
+                return;
+            }
+            res.status(Status.STATUS_OK).send(obj);
         });
-        if (!obj) {
-            res.status(Status.STATUS_NO_CONTENT).send(false);
-            return;
-        }
-        res.status(Status.STATUS_OK).send(obj);
+
     });
 
     app.post(teamroute + nconf.get('routing:team:login:logout'), async (req, res) => {

@@ -24,18 +24,17 @@ const getuser = { /**
         }
         if (teamid && authkey) {
             try {
-                conn.query(`SELECT * from team_user where teamid = ?`, teamid, (err, result, fields) => {
+                conn.query(`SELECT * from team_user where teamid = ?`, [teamid], (err, result, fields) => {
                     if (err) {
                         
                         log.warn(lang.errors.database.err, err)
                         return false;
                     }
-                    
                     bcryptjs.compare(result[0].authkey, authkey, async (err, bres) => {
                         if (err) {
                             log.info(__filename, err)
                             return cb(false);
-                        }
+                        };
                         if (bres) {
                             if (isFrontedRequest) {
                                 return cb({
@@ -49,6 +48,8 @@ const getuser = { /**
                             } else {
                                 return cb(result[0]);
                             }
+                        }else {
+                            return cb(false);
                         }
                     });
                 });
