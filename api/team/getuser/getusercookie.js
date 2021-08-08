@@ -1,6 +1,6 @@
 const getusercookie = {
     returncookie(req, cb) {
-        return cb(req.cookies);
+        return cb(req.signedCookies);
     }
 }
 

@@ -17,13 +17,15 @@ module.exports = (app) => {
             maxAge: 600000
         }
     }));
-    app.use(cookieParser());
+    app.use(cookieParser(nconf.get('sessionSecret')));
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
     app.use(flash());
     app.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", nconf.get('cors:headers:Access-Control-Allow-Origin'));
+        res.header("Access-Control-Allow-Methods", nconf.get('cors:headers:Access-Control-Allow-Methods'));
         res.header("Access-Control-Allow-Headers", nconf.get("cors:headers:Access-Control-Allow-Headers"));
+        res.header("Access-Control-Max-Age", nconf.get('cors:headers:Access-Control-Max-Age'));
         res.header("withCredentials", nconf.get('cors:headers:withCredentials'));
         res.header("Content-Type", nconf.get('cors:headers:Content-Type'));
         next();

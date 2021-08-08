@@ -10,7 +10,7 @@ const getuser = { /**
      * @param string db Select database
      * @return array cb
      */
-    getUser(req, isFrontedRequest, cb) {
+    async getUser(req, isFrontedRequest, cb) {
         var teamid;
         var authkey;
         try {
@@ -53,7 +53,6 @@ const getuser = { /**
                     });
                 });
             } catch (err) {
-                
                 log.warn(__filename, err);
                 return cb(false);
             }

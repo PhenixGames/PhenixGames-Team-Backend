@@ -11,10 +11,10 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PhenixGames/PhenixGames-Website.git"
+    "url": "git+https://github.com/PhenixGames/PhenixGames-Team-Backend.git"
   },
   "bugs": {
-    "url": "https://github.com/PhenixGames/PhenixGames-Website/issues"
+    "url": "https://github.com/PhenixGames/PhenixGames-Team-Backend/issues"
   },
   "dependencies": {
     "@aspiesoft/random-number-js": "^1.3.2",
