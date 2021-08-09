@@ -12,10 +12,10 @@ const conn = mysql.createConnection({
 
 conn.connect((err) => {
     if(err) {
-        log.error(`Connected to the MySQL Databaase / Server "${nconf.get('database:host')}"`);
+        log.error(`Connected to the MySQL Database ${nconf.get('database:database')} / Server "${nconf.get('database:host')}"`);
         return console.error('DATABASE ERROR: ' + err.message);
     }
-    log.info(`Connected to the MySQL Databaase / Server "${nconf.get('database:host')}"`);
+    log.info(`Connected to the MySQL Database ${nconf.get('database:database')} / Server "${nconf.get('database:host')}"`);
 });
 
 
