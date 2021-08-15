@@ -9,7 +9,7 @@ const getPlayer = {
             }
         });
 
-        roleplaydb.query(`SELECT pid, Rkg_name, team_rank, banned, VIP, online FROM players`, (err, result) => {
+        roleplaydb.query(`SELECT pid, Rkg_name, team_rank, banned, VIP, online FROM players ORDER BY banned, online DESC`, (err, result) => {
             if(err) {
                 log.warn(__filename, err);
                 return cb(false);

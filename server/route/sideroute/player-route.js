@@ -36,6 +36,7 @@ module.exports = (app, teamroute, nconf, log, Status) => {
                 return;
             }
             res.status(Status.STATUS_OK).json(true);
+            return;
         });
     });
 }
