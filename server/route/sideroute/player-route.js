@@ -15,6 +15,7 @@ module.exports = (app, teamroute, nconf, log, Status) => {
                 return;
             }
             res.status(Status.STATUS_OK).json(obj);
+            return;
         });
     });
 
@@ -28,8 +29,14 @@ module.exports = (app, teamroute, nconf, log, Status) => {
          * @param 0 = respawn
          * @param 1 = support
          * @param 2 = bannen
-         * @param 3 = info
+         * @param 3 = info //not here
          */
+        
+        if(req.body.type === 3) {
+            res.status(Status.STATUS_FORBIDDEN).json(false);
+            return;
+        }
+
         editPlayer.editPlayer(req.body.pid, req.body.type, (response) => {
             if(!response) {
                 res.status(Status.STATUS_BAD_REQUEST).json(false);
@@ -39,4 +46,20 @@ module.exports = (app, teamroute, nconf, log, Status) => {
             return;
         });
     });
+
+    app.get(teamroute + nconf.get('routing:team:player:getPlayerData'), async (req, res) => {
+        log.info(`${
+            teamroute + nconf.get('routing:team:player:getPlayer')
+        } connected Team with IP: `, req.ip);
+        
+        getPlayer.getPlayerData(req.query.pid, req, async (response) => {
+            let result = await response;
+            if(!result) {
+                res.status(Status.STATUS_NO_CONTENT).json(false);
+                return;
+            }
+            res.status(Status.STATUS_OK).json(result);
+            return;
+        });
+    })
 }
