@@ -3,7 +3,7 @@ const log = require('../../../_log');
 const { verifycookie } = require('../getuser/verifycookie');
 
 const getPlayer = {
-    getPlayer: (res, req, cb) => {
+    get: (req, cb) => {
         verifycookie.verify(req, (response) => {
             if(!response) {
                 return cb(false);

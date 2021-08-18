@@ -7,7 +7,7 @@ module.exports = (app, teamroute, nconf, log, Status) => {
             teamroute + nconf.get('routing:team:player:getPlayer')
         } connected Team with IP: `, req.ip);
 
-        getPlayer.getPlayer(res, req, async (result) => {
+        getPlayer.get(req, async (result) => {
             var obj = await result;
             
             if (!obj) {
@@ -37,7 +37,7 @@ module.exports = (app, teamroute, nconf, log, Status) => {
             return;
         }
 
-        editPlayer.editPlayer(req.body.pid, req.body.type, (response) => {
+        editPlayer.edit(req.body.pid, req.body.type, (response) => {
             if(!response) {
                 res.status(Status.STATUS_BAD_REQUEST).json(false);
                 return;

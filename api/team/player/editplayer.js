@@ -7,7 +7,7 @@ const log = require("../../../_log");
  * @param 3 = info
  */
 const editPlayer = {
-    editPlayer: (pid, type, cb) => {
+    edit: (pid, type, cb) => {
         console.log(type)
         if (type == 2) {
             editPlayer.banPlayer(pid, (response) => {
@@ -42,7 +42,6 @@ const editPlayer = {
                     log.warn(__filename, err);
                     return cb(false);
                 }
-                console.log('123');
                 return cb(true);
             });
         });
