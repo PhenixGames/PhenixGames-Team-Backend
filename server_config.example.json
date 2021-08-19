@@ -1,12 +1,19 @@
 {
-  "sessionSecret": "LGn2TkWg4nLGn2TkWg4n11YdLGn2TkWg4n11MLMLYdK4yvs5b49TCp15pq11MLYdLGn2TkWg4n11MLYdK4yvs5b49TCp15pqK4yvs5b49TCp15pq",
-  "domain": "192.168.1.200",
-  "port": "8888",
+  "sessionSecret": "",
+  "domain": "",
+  "port": "",
   "database": {
-    "host": "localhost",
-    "user": "phpmyadmin",
-    "password": "lP7MzPFHOz9XwlmRZZav",
-    "database": "teambereich",
+    "host": "",
+    "user": "",
+    "password": "",
+    "database": "",
+    "charset": "utf8"
+  },
+  "database_2": {
+    "host": "",
+    "user": "",
+    "password": "",
+    "database": "",
     "charset": "utf8"
   },
   "cookie": {
@@ -17,7 +24,7 @@
   },
   "cors": {
     "headers": {
-      "Access-Control-Allow-Origin": "https://192.168.1.200",
+      "Access-Control-Allow-Origin": "",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Max-Age": 86400000000,

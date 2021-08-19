@@ -12,7 +12,7 @@ const app = express();
 serverconfig.argv().env().file({file: './server_config.json'});
 
 require('./server-init')(app, express);
-require('./server/route/route')(app, serverconfig)
+require('./server/route/mainroute')(app, serverconfig)
 
 
 app.listen(serverconfig.get('port'), () => {

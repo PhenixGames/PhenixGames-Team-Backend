@@ -1,7 +1,7 @@
 require("../../../server/init/file.init").fileinit(__filename, "init finished");
 
 const Status = require('../../../server/config/status.json');
-const {conn} = require("../../../server/db/db");
+const {conn} = require("../../../server/db/db_website");
 const log = require("../../../_log");
 const lang = require('../../../server/config/lang/getLang').getLang();
 const bcryptjs = require('bcryptjs');
