@@ -11,11 +11,15 @@ module.exports = (app, teamroute) => {
         
         vehicle.get(req, (response) => {
             if(!response) {
-                res.status(Status.STATUS_NOT_FOUND).json(false);
+                res.status(Status.STATUS_NO_CONTENT).json(false);
+                return;
+            }else if(response.err) {
+                res.status(Status.STATUS_BAD_REQUEST).json(false);
+                return;
+            }else {
+                res.status(Status.STATUS_OK).json(response);
                 return;
             }
-            res.status(Status.STATUS_OK).json(response);
-            return;
         });
     });
     app.put(teamroute + nconf.get('routing:team:vehicle:editVehicle'), async (req, res) => {

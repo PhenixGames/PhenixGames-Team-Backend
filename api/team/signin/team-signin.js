@@ -12,28 +12,29 @@ const teamSignin = {
     validateForm: (teamid, password, cb) => {
         switch (true) {
             case isNaN(teamid):
-                return cb({'status': Status.STATUS_METHOD_NOT_ALLOWED, 'message': lang.validation.signin.NaN});
+                return cb(false);
             case teamid.length < 5:
-                return cb({'status': Status.STATUS_METHOD_NOT_ALLOWED, 'message': lang.validation.signin.nolength});
+                return cb(false);
             case !password:
-                return cb({'status': Status.STATUS_NO_CONTENT, 'message': lang.validation.signin.Npwd});
+                return cb(false);
         }
+
+        return true;
     },
 
     signIn: (req, response, teamid, password, cb) => {
-        conn.query(`SELECT teamid, password FROM team_login WHERE teamid = ${
-            conn.escape(teamid)
-        }`, (err, res) => {
+        conn.query(`SELECT teamid, password FROM team_login WHERE teamid = ? `, [teamid], (err, res) => {
             if (err) {
-                return cb(lang.validation.signin.Nf);
+                return cb(false);
             }
-            if (!res) {
-                return cb(lang.validation.signin.Nf);
+            if (res == '') {
+                return cb(false);
             }
             dbteamid = res[0].teamid;
             dbpassword = res[0].password
-
+           
             teamSignin.checkPwd(response, password, dbpassword, dbteamid, (results) => {
+                
                 if (results) {
                     log.info('User logged in', req.ip);
                 } else {
@@ -47,11 +48,14 @@ const teamSignin = {
     checkPwd: async (response, password, dbpassword, teamid, cb) => {
         try {
             await bcryptjs.compare(password, dbpassword, async (err, result) => {
+                
                 if (err) {
-                    return cb(lang.validation.signin.nc);
+                    
+                    return cb(false);
                 }
                 if (result) {
                     try {
+                        
                         const id = uuid.v4()
                         const authkey = await bcryptjs.hash(id, nconf.get('bcrypt:saltRounds'));
                         teamSignin.insertDBAuthkey(id, teamid, (result) => {
@@ -67,6 +71,8 @@ const teamSignin = {
                         log.warn(__filename, err);
                         return cb(lang.errors.general);
                     }
+                }else {
+                    return cb(false);
                 }
             });
         } catch (err) {

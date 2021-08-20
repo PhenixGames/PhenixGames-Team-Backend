@@ -13,7 +13,7 @@ const vehicle = {
             roleplaydb.query(`SELECT * FROM vehicles`, (err, result) => {
                 if(err) {
                     log.warn(__filename, err);
-                    return cb(err);
+                    return cb({err: err});
                 }
                 return cb(result);
             });
