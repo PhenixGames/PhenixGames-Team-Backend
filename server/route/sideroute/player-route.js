@@ -9,13 +9,17 @@ module.exports = (app, teamroute, nconf, log, Status) => {
 
         getPlayer.get(req, async (result) => {
             var obj = await result;
-            
-            if (!obj) {
-                res.status(Status.STATUS_NO_CONTENT).json(false);
+            if(!obj) {
+                res.status(Status.STATUS_BAD_REQUEST).json(false);
                 return;
             }
-            res.status(Status.STATUS_OK).json(obj);
-            return;
+            else if (obj == '') {
+                res.status(Status.STATUS_NO_CONTENT).json(false);
+                return;
+            }else {
+                res.status(Status.STATUS_OK).json(obj);
+                return;
+            }
         });
     });
 
@@ -33,7 +37,7 @@ module.exports = (app, teamroute, nconf, log, Status) => {
          */
         
         if(req.body.type === 3) {
-            res.status(Status.STATUS_FORBIDDEN).json(false);
+            res.status(Status.STATUS_UNAUTHORIZED).json(false);
             return;
         }
 
@@ -55,11 +59,16 @@ module.exports = (app, teamroute, nconf, log, Status) => {
         getPlayer.getPlayerData(req.query.pid, req, async (response) => {
             let result = await response;
             if(!result) {
-                res.status(Status.STATUS_NO_CONTENT).json(false);
+                res.status(Status.STATUS_BAD_REQUEST).json(false);
                 return;
             }
+            else if(result == '') {
+                res.status(Status.STATUS_NO_CONTENT).json(false);
+                return;
+            } else {
             res.status(Status.STATUS_OK).json(result);
             return;
+            }
         });
     })
 }
