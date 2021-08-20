@@ -45,6 +45,15 @@
       "login": {
         "signin": "/signin",
         "logout": "/logout"
+      },
+      "player": {
+        "getPlayer": "/getplayer",
+        "editPlayer": "/editplayer",
+        "getPlayerData": "/getplayerdata"
+      },
+      "vehicle": {
+        "getVehicle": "/getvehicle",
+        "editVehicle": "/editvehicle"
       }
     }
   }
