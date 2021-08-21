@@ -1,12 +1,45 @@
+const { conn } = require("../../../server/db/db_website");
+const Validator = require('validator');
+const bcryptjs = require('bcryptjs');
+const log = require("../../../_log");
+const { getLang } = require("../../../server/config/lang/getLang");
+const lang = getLang();
+
 const verifycookie = {
     verify: (req, cb) => {
-        const cookie1 = req.signedCookies.pg_authkey;
-        const cookie2 = req.signedCookies.pg_teamid;
-
-        if(cookie1 && cookie2) {
-            return cb(true);
+        const authkey = req.signedCookies.pg_authkey;
+        const teamid = req.signedCookies.pg_teamid;
+        
+        if(isNaN(teamid)) {
+            console.log('NAN');
+            return cb(false);
         }
-        return cb(false);
+
+        if(!Validator.toString(authkey)) {
+            console.log('kein string');
+            return cb(false);
+        }
+        if(authkey && teamid) {
+            conn.query(`SELECT authkey FROM team_login WHERE teamid = ?`, [teamid], (err, result) => {
+                if (err) {       
+                    log.warn(lang.errors.database.err, err);
+                    return cb(false);
+                }
+                bcryptjs.compare(result[0].authkey, authkey, async (err, bres) => {
+                    if (err) {
+                        log.info(__filename, err)
+                        return cb(false);
+                    };
+                    if(bres) {
+                        return cb(true);
+                    }else {
+                       return cb(false);
+                    }
+                });
+            });
+        }else {
+            return cb(false);
+        }
     }
 }
 
