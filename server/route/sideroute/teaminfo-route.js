@@ -1,7 +1,7 @@
 const { teaminfo } = require("../../../api/team/teaminfo/team-teaminfo")
 const nconf = require('nconf');
 const log = require("../../../_log");
-const {body} = require('express-validator');
+const {body, query} = require('express-validator');
 const Status = require('../../config/status.json');
 
 module.exports = (app, teamroute) => {
@@ -23,16 +23,20 @@ module.exports = (app, teamroute) => {
         });
     });
 
-    app.get(teamroute + nconf.get('routing:team:teaminfo:getteaminfo'), async (req, res) => {
+    app.get(teamroute + nconf.get('routing:team:teaminfo:getteaminfo'), query('q').isBoolean(), async (req, res) => {
         log.info(`${
             teamroute + nconf.get('routing:team:teaminfo:setteaminfo')
         } connected Team with IP: `, req.ip);
 
-        teaminfo.get((response) => {
-            if(response) {
-                res.status(Status.STATUS_OK).json(true).end();
+        teaminfo.get(req, req.query.q, (response) => {
+            if(response === "404") {
+                res.status(Status.STATUS_NO_CONTENT).json(false).end();
                 return;
-            }else {
+            }
+            if(response) {
+                res.status(Status.STATUS_OK).json(response).end();
+                return;
+            } else {
                 res.status(Status.STATUS_BAD_REQUEST).json(false).end();
                 return;
             }
