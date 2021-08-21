@@ -12,8 +12,9 @@ const roleplaydb = mysql.createConnection({
 
 roleplaydb.connect((err) => {
     if(err) {
-        log.error(`Connected to the MySQL Database ${nconf.get('database_2:database')} / Server "${nconf.get('database:host')}"`);
-        return console.error('DATABASE ERROR: ' + err.message);
+        log.error(`Failed to connect to the MySQL Database ${nconf.get('database_2:database')} / Server "${nconf.get('database:host')}"`, err);
+        console.error('DATABASE ERROR: ' + err.message);
+        return false;
     }
     log.info(`Connected to the MySQL Database ${nconf.get('database_2:database')} / Server "${nconf.get('database:host')}"`);
 });

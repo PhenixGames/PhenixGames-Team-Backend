@@ -18,6 +18,9 @@ conn.connect((err) => {
     log.info(`Connected to the MySQL Database ${nconf.get('database:database')} / Server "${nconf.get('database:host')}"`);
 });
 
+conn.on('error', function(err) {
+    console.log("[mysql error]",err);
+});
 
 module.exports = {
     conn
