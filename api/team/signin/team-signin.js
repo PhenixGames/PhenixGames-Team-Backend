@@ -34,13 +34,11 @@ const teamSignin = {
             dbpassword = res[0].password
            
             teamSignin.checkPwd(response, password, dbpassword, dbteamid, (results) => {
-                
                 if (results) {
-                    log.info('User logged in', req.ip);
+                    return cb(results);
                 } else {
-                    log.info('User failed signin');
+                    return cb(false);
                 }
-                return cb(results);
             });
         });
     },

@@ -12,10 +12,10 @@ module.exports = (app, teamroute, nconf, teamSignin, log, Status) => {
             if(err) {return;}
             teamSignin.signIn(req, res, req.body.teamid, req.body.password, (response) => {
                 if(!response) {
-                    res.status(Status.STATUS_NO_CONTENT).json(false);
+                    res.status(Status.STATUS_NO_CONTENT).json(false).end();
                     return;
                 }
-                res.status(Status.STATUS_OK).json(response);
+                res.status(Status.STATUS_OK).json(response).end();
                 return;
             });
         } catch (err) {
