@@ -9,3 +9,5 @@ server_config.json
 
 #LOG FILES
 log/
+
+backend_config.ps1
