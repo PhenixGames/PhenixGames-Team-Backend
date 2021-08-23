@@ -1,7 +1,7 @@
 const log = require("../../../_log");
 const Status = require('../../config/status.json');
 const nconf = require('nconf');
-const { vehicle } = require('../../../api/team/vehicle/vehicle');
+const { vehicle } = require(`../../../api/team/${nconf.get('apiv')}/vehicle/vehicle`);
 
 module.exports = (app, teamroute) => {
     app.get(teamroute + nconf.get('routing:team:vehicle:getVehicle'), async (req, res) => {

@@ -1,5 +1,6 @@
-const {getPlayer} = require('../../../api/team/player/getplayer');
-const {editPlayer} = require('../../../api/team/player/editplayer');
+const nconf = require('nconf');
+const {getPlayer} = require(`../../../api/team/${nconf.get('apiv')}/player/getplayer`);
+const {editPlayer} = require(`../../../api/team/${nconf.get('apiv')}/player/editplayer`);
 
 module.exports = (app, teamroute, nconf, log, Status) => {
     app.get(teamroute + nconf.get('routing:team:player:getPlayer'), async (req, res) => {

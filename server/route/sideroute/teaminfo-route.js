@@ -1,5 +1,5 @@
-const { teaminfo } = require("../../../api/team/teaminfo/team-teaminfo")
 const nconf = require('nconf');
+const { teaminfo } = require(`../../../api/team/${nconf.get('apiv')}/teaminfo/team-teaminfo`)
 const log = require("../../../_log");
 const {body, query} = require('express-validator');
 const Status = require('../../config/status.json');

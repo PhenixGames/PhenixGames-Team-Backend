@@ -1,5 +1,5 @@
 const log = require("../../../../_log");
-const {removeUserCookie} = require("../../getuser/removeUserCookie")
+const {removeUserCookie} = require("../getuser/removeUserCookie")
 
 const logout = {
     teamLogout: async (res, cb) => {

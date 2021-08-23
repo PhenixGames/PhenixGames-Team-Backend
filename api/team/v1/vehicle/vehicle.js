@@ -1,5 +1,5 @@
 const { roleplaydb } = require("../../../../server/db/db_roleplay");
-const { verifycookie } = require("../../getuser/verifycookie");
+const { verifycookie } = require("../getuser/verifycookie");
 
 const vehicle = {
     get: (req, cb) => {
