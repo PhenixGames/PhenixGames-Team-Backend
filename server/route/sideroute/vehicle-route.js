@@ -4,7 +4,7 @@ const nconf = require('nconf');
 const { vehicle } = require(`../../../api/team/${nconf.get('apiv')}/vehicle/vehicle`);
 
 module.exports = (app, teamroute) => {
-    app.get(teamroute + nconf.get('routing:team:vehicle:getVehicle'), async (req, res) => {
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:vehicle:getVehicle'), async (req, res) => {
         log.info(`${
             teamroute + nconf.get('routing:team:vehicle:getVehicle')
         } connected Team with IP: `, req.ip);
@@ -22,7 +22,7 @@ module.exports = (app, teamroute) => {
             }
         });
     });
-    app.put(teamroute + nconf.get('routing:team:vehicle:editVehicle'), async (req, res) => {
+    app.put(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:vehicle:editVehicle'), async (req, res) => {
         log.info(`${
             teamroute + nconf.get('routing:team:vehicle:editVehicle')
         } connected Team with IP: `, req.ip);

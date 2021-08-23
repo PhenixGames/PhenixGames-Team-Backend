@@ -1,5 +1,5 @@
 module.exports = (app, teamroute, nconf, getuser, logout, Status) => {
-    app.post(teamroute + nconf.get('routing:team:login:logout'), async (req, res) => {
+    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:login:logout'), async (req, res) => {
         getuser.getUser(req, true, async (result) => {
             if (!result) {
                 res.status(Status.STATUS_BAD_REQUEST).json(false);

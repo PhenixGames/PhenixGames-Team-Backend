@@ -5,7 +5,7 @@ const {body, query} = require('express-validator');
 const Status = require('../../config/status.json');
 
 module.exports = (app, teamroute) => {
-    app.post(teamroute + nconf.get('routing:team:teaminfo:setteaminfo'), body('teaminfo').isString().trim().escape(), async (req, res) => {
+    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:teaminfo:setteaminfo'), body('teaminfo').isString().trim().escape(), async (req, res) => {
         log.info(`${
             teamroute + nconf.get('routing:team:teaminfo:setteaminfo')
         } connected Team with IP: `, req.ip);
@@ -23,7 +23,7 @@ module.exports = (app, teamroute) => {
         });
     });
 
-    app.get(teamroute + nconf.get('routing:team:teaminfo:getteaminfo'), query('q').isBoolean(), async (req, res) => {
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:teaminfo:getteaminfo'), query('q').isBoolean(), async (req, res) => {
         log.info(`${
             teamroute + nconf.get('routing:team:teaminfo:setteaminfo')
         } connected Team with IP: `, req.ip);

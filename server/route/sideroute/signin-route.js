@@ -1,5 +1,5 @@
 module.exports = (app, teamroute, nconf, teamSignin, log, Status) => {
-    app.post(teamroute + nconf.get('routing:team:login:signin'), async (req, res) => {
+    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:login:signin'), async (req, res) => {
         let err = false;
         try {
             teamSignin.validateForm(req.body.teamid, req.body.password, (response) => {
@@ -10,7 +10,7 @@ module.exports = (app, teamroute, nconf, teamSignin, log, Status) => {
                 }
             });
             if(err) {return;}
-            teamSignin.signIn(req, res, req.body.teamid, req.body.password, (response) => {
+            teamSignin.signIn(res, req.body.teamid, req.body.password, (response) => {
                 if(!response) {
                     res.status(Status.STATUS_NO_CONTENT).json(false).end();
                     return;

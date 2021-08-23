@@ -3,7 +3,7 @@ const {getPlayer} = require(`../../../api/team/${nconf.get('apiv')}/player/getpl
 const {editPlayer} = require(`../../../api/team/${nconf.get('apiv')}/player/editplayer`);
 
 module.exports = (app, teamroute, nconf, log, Status) => {
-    app.get(teamroute + nconf.get('routing:team:player:getPlayer'), async (req, res) => {
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer'), async (req, res) => {
         log.info(`${
             teamroute + nconf.get('routing:team:player:getPlayer')
         } connected Team with IP: `, req.ip);

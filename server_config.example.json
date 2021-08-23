@@ -2,6 +2,7 @@
   "sessionSecret": "",
   "domain": "",
   "port": "",
+  "apiv": "",
   "database": {
     "host": "",
     "user": "",

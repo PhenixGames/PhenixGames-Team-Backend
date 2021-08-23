@@ -1,18 +1,26 @@
 require("../../../../server/init/file.init").fileinit(__filename, "init finished");
 
-const Status = require('../../../../server/config/status.json');
+//const Status = require('../../../../server/config/status.json');
 const {conn} = require("../../../../server/db/db_website");
 const log = require("../../../../_log");
 const lang = require('../../../../server/config/lang/getLang').getLang();
 const bcryptjs = require('bcryptjs');
 const uuid = require('uuid')
 const nconf = require('nconf');
+const Status = require('../../../../server/config/status.json');
+const { setErrorMessage } = require("../../../../src/js/setErrorMessage");
 
 const teamSignin = {
     validateForm: (teamid, password, cb) => {
+        let errorobj;
+        let status;
         switch (true) {
             case isNaN(teamid):
-                return cb(false);
+                status = Status.STATUS_OK;
+                //!TO DO
+                errorobj = {status, }
+                //
+                return cb(setErrorMessage(errorobj));
             case teamid.length < 5:
                 return cb(false);
             case !password:
@@ -22,18 +30,18 @@ const teamSignin = {
         return true;
     },
 
-    signIn: (req, response, teamid, password, cb) => {
-        conn.query(`SELECT teamid, password FROM team_login WHERE teamid = ? `, [teamid], (err, res) => {
+    signIn: (res, teamid, password, cb) => {
+        conn.query(`SELECT teamid, password FROM team_login WHERE teamid = ? `, [teamid], (err, result) => {
             if (err) {
                 return cb(false);
             }
-            if (res == '') {
+            if (result == '') {
                 return cb(false);
             }
-            dbteamid = res[0].teamid;
-            dbpassword = res[0].password
+            dbteamid = result[0].teamid;
+            dbpassword = result[0].password
            
-            teamSignin.checkPwd(response, password, dbpassword, dbteamid, (results) => {
+            teamSignin.checkPwd(res, password, dbpassword, dbteamid, (results) => {
                 if (results) {
                     return cb(results);
                 } else {
@@ -43,12 +51,10 @@ const teamSignin = {
         });
     },
 
-    checkPwd: async (response, password, dbpassword, teamid, cb) => {
+    checkPwd: async (res, password, dbpassword, teamid, cb) => {
         try {
             await bcryptjs.compare(password, dbpassword, async (err, result) => {
-                
                 if (err) {
-                    
                     return cb(false);
                 }
                 if (result) {
@@ -60,7 +66,7 @@ const teamSignin = {
                             }
                         });
 
-                        teamSignin.addCookie(response, authkey, teamid, (result) => {
+                        teamSignin.addCookie(res, authkey, teamid, (result) => {
                             return cb({
                                 
                             });

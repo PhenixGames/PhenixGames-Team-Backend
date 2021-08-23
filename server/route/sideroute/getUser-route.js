@@ -1,5 +1,5 @@
 module.exports = (app, teamroute, nconf, getuser, log, Status) => {
-    app.get(teamroute + nconf.get('routing:team:getuser'), async (req, res) => {
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:getuser'), async (req, res) => {
         log.info(`${
             teamroute + nconf.get('routing:team:getuser')
         } connected Team with IP: `, req.ip);
