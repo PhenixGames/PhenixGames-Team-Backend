@@ -1,8 +1,8 @@
-const { conn } = require("../../../server/db/db_website");
-const { getusercookie } = require("../getuser/getusercookie");
-const { verifycookie } = require("../getuser/verifycookie");
+const { conn } = require("../../../../server/db/db_website");
+const { getusercookie } = require("../../getuser/getusercookie");
+const { verifycookie } = require("../../getuser/verifycookie");
 const uuid = require('uuid');
-const log = require("../../../_log");
+const log = require("../../../../_log");
 
 const teaminfo = {
     save: (req, message, cb) => {

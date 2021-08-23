@@ -1,9 +1,9 @@
-require("../../../server/init/file.init").fileinit(__filename, "init finished");
+require("../../../../server/init/file.init").fileinit(__filename, "init finished");
 
-const Status = require('../../../server/config/status.json');
-const {conn} = require("../../../server/db/db_website");
-const log = require("../../../_log");
-const lang = require('../../../server/config/lang/getLang').getLang();
+const Status = require('../../../../server/config/status.json');
+const {conn} = require("../../../../server/db/db_website");
+const log = require("../../../../_log");
+const lang = require('../../../../server/config/lang/getLang').getLang();
 const bcryptjs = require('bcryptjs');
 const uuid = require('uuid')
 const nconf = require('nconf');
@@ -53,9 +53,7 @@ const teamSignin = {
                 }
                 if (result) {
                     try {
-                        
-                        const id = uuid.v4()
-                        const authkey = await bcryptjs.hash(id, nconf.get('bcrypt:saltRounds'));
+                        const authkey = teamSignin.createAuthKey();
                         teamSignin.insertDBAuthkey(id, teamid, (result) => {
                             if (!result) {
                                 return cb(false);
@@ -63,7 +61,9 @@ const teamSignin = {
                         });
 
                         teamSignin.addCookie(response, authkey, teamid, (result) => {
-                            return cb(result);
+                            return cb({
+                                
+                            });
                         });
                     } catch (err) {
                         log.warn(__filename, err);
@@ -77,6 +77,10 @@ const teamSignin = {
             log.warn(__filename, err)
             return cb(false);
         }
+    },
+    createAuthKey: async () => {
+        let id = uuid.v4()
+        return await bcryptjs.hash(id, nconf.get('bcrypt:saltRounds'));
     },
     addCookie: (res, id, teamid, cb) => {
         res.cookie('pg_authkey', id, {

@@ -1,6 +1,6 @@
-const {roleplaydb} = require('../../../server/db/db_roleplay');
-const log = require('../../../_log');
-const { verifycookie } = require('../getuser/verifycookie');
+const {roleplaydb} = require('../../../../server/db/db_roleplay');
+const log = require('../../../../_log');
+const { verifycookie } = require('../../getuser/verifycookie');
 
 const getPlayer = {
     get: (req, cb) => {

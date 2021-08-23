@@ -1,5 +1,5 @@
-const {roleplaydb} = require("../../../server/db/db_roleplay");
-const log = require("../../../_log");
+const {roleplaydb} = require("../../../../server/db/db_roleplay");
+const log = require("../../../../_log");
 /**
  * @param 0 = respawn
  * @param 1 = support

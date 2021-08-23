@@ -1,8 +1,8 @@
-const { conn } = require("../../../server/db/db_website");
+const { conn } = require("../../../../server/db/db_website");
 const Validator = require('validator');
 const bcryptjs = require('bcryptjs');
-const log = require("../../../_log");
-const { getLang } = require("../../../server/config/lang/getLang");
+const log = require("../../../../_log");
+const { getLang } = require("../../../../server/config/lang/getLang");
 const lang = getLang();
 
 const verifycookie = {
