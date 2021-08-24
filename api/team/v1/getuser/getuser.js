@@ -1,8 +1,11 @@
 const lang = require("../../../../server/config/lang/getLang").getLang();
 const bcryptjs = require("bcryptjs");
 const {conn} = require("../../../../server/db/db_website");
+const setErrorMessage = require("../../../../src/js/setErrorMessage");
 const log = require("../../../../_log");
 const {getusercookie} = require("./getusercookie");
+const Status = require('../../../../server/config/status.json');
+
 const getuser = { /**
      * Select data from the database and send it to the frontend
      *  
@@ -23,7 +26,7 @@ const getuser = { /**
             return cb(false);
         }
         if (teamid && authkey) {
-            try {
+            try { 
                 conn.query(`SELECT * from team_user where teamid = ?`, [teamid], (err, result, fields) => {
                     if (err) {
                         
@@ -49,16 +52,22 @@ const getuser = { /**
                                 return cb(result[0]);
                             }
                         }else {
-                            return cb(false);
+                            
+                            // status = Status.STATUS_OK;
+                            // errorobj = [status, 0, true];
+                            // return cb(setErrorMessage(errorobj));
                         }
                     });
                 });
             } catch (err) {
+                
                 log.warn(__filename, err);
                 return cb(false);
             }
         } else {
-            return cb(false);
+            status = Status.STATUS_NO_CONTENT;
+            errorobj = [status, 0, true];
+            return cb(setErrorMessage(errorobj));
         }
     }
 }

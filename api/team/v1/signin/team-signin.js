@@ -17,9 +17,7 @@ const teamSignin = {
         switch (true) {
             case isNaN(teamid):
                 status = Status.STATUS_OK;
-                //!TO DO
-                errorobj = {status, }
-                //
+                errorobj = [status, 0, true];
                 return cb(setErrorMessage(errorobj));
             case teamid.length < 5:
                 return cb(false);
