@@ -1,0 +1,11 @@
+{
+    "RES_NO_DATA": "Keine Daten gefunden.",
+    "RES_NO_AUTHORIZED": "Du bist nicht authorisiert diese Aktion durchzuführen.",
+    "RES_INTERNAL_ERROR": "Ein interner Fehler ist aufgetreten. Bitte kontaktiere ein Teammitglied.",
+    "RES_PASWORD_NOT_CORRECT": "Das Passwort ist falsch.",
+    "opt": {
+        "RES_NO_TEAMID": "Es wurde keine Teamid übermittelt",
+        "RES_LENGTH_TEAMID": "Die Teamid muss mindestens 5 Zeichen lang sein.",
+        "RES_NO_PASSWORD": "Es wurde kein Passwort übermittelt"
+    }
+}

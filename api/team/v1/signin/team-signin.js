@@ -12,39 +12,72 @@ const { setErrorMessage } = require("../../../../src/js/setErrorMessage");
 
 const teamSignin = {
     validateForm: (teamid, password, cb) => {
-        let errorobj;
         let status;
+        let code;
+        let isError;
+        let opt;
         switch (true) {
             case isNaN(teamid):
                 status = Status.STATUS_OK;
-                errorobj = [status, 0, true];
-                return cb(setErrorMessage(errorobj));
+                code = "RES_NO_DATA";
+                isError = true;
+                opt = "RES_NO_TEAMID";
+                return cb(setErrorMessage([status, code, isError, opt]));
             case teamid.length < 5:
-                return cb(false);
+                status = Status.STATUS_OK;
+                code = "RES_NO_DATA";
+                isError = true;
+                opt = "RES_LENGTH_TEAMID";
+                return cb(setErrorMessage([status, code, isError, opt]));
             case !password:
-                return cb(false);
+                status = Status.STATUS_OK;
+                code = "RES_NO_DATA";
+                isError = true;
+                opt = "RES_NO_PASSWORD";
+                return cb(setErrorMessage([status, code, isError, opt]));
         }
 
         return true;
     },
 
     signIn: (res, teamid, password, cb) => {
-        conn.query(`SELECT teamid, password FROM team_login WHERE teamid = ? `, [teamid], (err, result) => {
+        conn.query(`SELECT teamid, password FROM team_login WHERE teamid = ? `, [teamid], async (err, result) => {
             if (err) {
-                return cb(false);
+                //SELECT error
+                let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+                let code = "RES_INTERNAL_ERROR";
+                let isError = true;
+                return cb(setErrorMessage([status, code, isError]));
             }
             if (result == '') {
-                return cb(false);
+                let status = Status.STATUS_NO_CONTENT;
+                let code = "RES_NO_DATA";
+                let isError = true;
+                return cb([status, code, isError]);
             }
             dbteamid = result[0].teamid;
             dbpassword = result[0].password
            
+            //check password
             teamSignin.checkPwd(res, password, dbpassword, dbteamid, (results) => {
-                if (results) {
-                    return cb(results);
-                } else {
-                    return cb(false);
+                if(!result){
+                    let status = Status.STATUS_NOT_ACCEPTABLE;
+                    let code = "RES_PASWORD_NOT_CORRECT";
+                    let isError = true;
+                    return cb(setErrorMessage([status, code, isError]));
                 }
+            });
+
+            const authkey = await teamSignin.createAuthKey();
+            const hashedAuthKey = await teamSignin.hashAuthKey(authkey);
+            teamSignin.insertDBAuthkey(authkey, teamid, (result) => {
+                if (result !== true) {
+                    return cb(result);
+                }
+            });
+
+            teamSignin.addCookie(res, hashedAuthKey, teamid, (result) => {
+                return cb(result);
             });
         });
     },
@@ -53,41 +86,36 @@ const teamSignin = {
         try {
             await bcryptjs.compare(password, dbpassword, async (err, result) => {
                 if (err) {
-                    return cb(false);
+                    //compare error
+                    log.warn(__filename, err);
+                    let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+                    let code = "RES_INTERNAL_ERROR";
+                    let isError = true;
+                    return cb(setErrorMessage([status, code, isError]));
                 }
-                if (result) {
-                    try {
-                        const authkey = teamSignin.createAuthKey();
-                        teamSignin.insertDBAuthkey(id, teamid, (result) => {
-                            if (!result) {
-                                return cb(false);
-                            }
-                        });
-
-                        teamSignin.addCookie(res, authkey, teamid, (result) => {
-                            return cb({
-                                
-                            });
-                        });
-                    } catch (err) {
-                        log.warn(__filename, err);
-                        return cb(lang.errors.general);
-                    }
+                if (result) {                    
+                    return cb(true);
                 }else {
                     return cb(false);
                 }
             });
         } catch (err) {
             log.warn(__filename, err)
-            return cb(false);
+            let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+            let code = "RES_INTERNAL_ERROR";
+            let isError = true;
+            return cb(setErrorMessage([status, code, isError]));
         }
     },
     createAuthKey: async () => {
-        let id = uuid.v4()
-        return await bcryptjs.hash(id, nconf.get('bcrypt:saltRounds'));
+        let authkey = uuid.v4()
+        return authkey;
     },
-    addCookie: (res, id, teamid, cb) => {
-        res.cookie('pg_authkey', id, {
+    hashAuthKey: async (authkey) => {
+        return await bcryptjs.hash(authkey, nconf.get('bcrypt:saltRounds'));
+    },
+    addCookie: (res, authkey, teamid, cb) => {
+        res.cookie('pg_authkey', authkey, {
             maxAge: nconf.get('cookie:maxAge'),
             httpOnly: nconf.get('cookie:httpOnly'),
             expires: new Date(100000000000),
@@ -108,24 +136,33 @@ const teamSignin = {
         try {
             conn.query('UPDATE team_login SET authkey = ? WHERE teamid = ?', [
                 autkey, teamid
-            ], (err, results) => {
+            ], (err) => {
                 if (err) {
                     log.info(__filename, err);
-                    return cb(false);
+                    let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+                    let code = "RES_INTERNAL_ERROR";
+                    let isError = true;
+                    return cb(setErrorMessage([status, code, isError]));
                 }
                 conn.query('UPDATE team_user SET authkey = ? WHERE teamid = ?', [
                     autkey, teamid
-                ], (err, results) => {
+                ], (err) => {
                     if (err) {
                         log.info(__filename, err);
-                        return cb(false);
+                        let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+                        let code = "RES_INTERNAL_ERROR";
+                        let isError = true;
+                        return cb(setErrorMessage([status, code, isError]));
                     }
                     return cb(true);
                 })
             });
         } catch (err) {
             log.warn(__filename, err);
-            return cb(false);
+            let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+            let code = "RES_INTERNAL_ERROR";
+            let isError = true;
+            return cb(setErrorMessage([status, code, isError]));
         }
     }
 };

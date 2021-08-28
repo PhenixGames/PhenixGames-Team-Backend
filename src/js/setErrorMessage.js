@@ -1,3 +1,5 @@
+const codes = require('../json/errorcodes.json');
+
 /**
  * 
  * @param {Number} status 
@@ -7,31 +9,12 @@
  * @returns {Object}
  */
 module.exports = function setErrorMessage(arr) {
-    console.log('go');
-    let statuscode = {
-        2: "200",
-        3: "s",
-        4: "300",
-        5: "r",
-        6: "400",
-        7: "i",
-        8: "500",
-        9: "i"
-    }
-    let codeprefix = '';
-
-    for (let i in statuscode) {
-        console.log(arr[0])
-        if(arr.filter(element => element == statuscode[i])) {
-            i++;
-            codeprefix = statuscode[i];
-            break;
-        }
-    }
+    let rescode = codes[arr[1]];
 
     return {
         "status": arr[0],
-        "code": `pg_${codeprefix}_${arr[1]}`,
+        "code": `${rescode}`,
         "isError": arr[2],
+        "optional": arr[3]
     };
 }

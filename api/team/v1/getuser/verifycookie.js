@@ -11,7 +11,6 @@ const verifycookie = {
         const teamid = req.signedCookies.pg_teamid;
         
         if(isNaN(teamid)) {
-            console.log('NAN');
             return cb(false);
         }
 
