@@ -15,6 +15,6 @@ module.exports = function setErrorMessage(arr) {
         "status": arr[0],
         "code": `${rescode}`,
         "isError": arr[2],
-        "optional": arr[3]
+        "opt": arr[3]
     };
 }

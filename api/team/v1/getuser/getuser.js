@@ -63,7 +63,11 @@ const getuser = { /**
                                 });
                             } else {
                                 //isFrontedRequest false, all data will be returned (password, authkey, etc)
-                                return cb(result[0]);
+                                let status = Status.STATUS_OK;
+                                let code = "RES_DATA_FOUND";
+                                let isError = false;
+                                let opt = result[0];
+                                return cb(setErrorMessage([status, code, isError, opt]));
                             }
                         }else {
                             //No Authkey found
