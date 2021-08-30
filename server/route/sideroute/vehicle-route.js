@@ -47,7 +47,7 @@ module.exports = (app, teamroute) => {
         const vid = req.body.vid;
         const type = req.body.type;
 
-        vehicle.edit(req, vid, type, (response) => {
+        vehicle.edit(vid, type, (response) => {
             res.status(response.status).json(response).end();
             return;
         });

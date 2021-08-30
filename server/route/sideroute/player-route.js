@@ -45,7 +45,7 @@ module.exports = (app, teamroute) => {
         });
 
         log.info(`${
-            teamroute + nconf.get('routing:team:player:getPlayer')
+            teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer')
         } connected Team with IP: `, req.ip);
 
         /**
@@ -70,7 +70,7 @@ module.exports = (app, teamroute) => {
         });
     });
 
-    app.get(teamroute + nconf.get('routing:team:player:getPlayerData'), async (req, res) => {
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayerData'), async (req, res) => {
 
         verifycookie.verify(req, (response) => {
             if(!response) {
@@ -84,7 +84,7 @@ module.exports = (app, teamroute) => {
         });
 
         log.info(`${
-            teamroute + nconf.get('routing:team:player:getPlayer')
+            teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer')
         } connected Team with IP: `, req.ip);
         
         getPlayer.getPlayerData(req.query.pid, req, async (response) => {

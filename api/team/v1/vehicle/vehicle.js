@@ -31,7 +31,7 @@ const vehicle = {
                     let isError = true;
                     return cb(setErrorMessage([status, code, isError]));
                 }
-                let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+                let status = Status.STATUS_OK;
                 let code = "RES_DATA_FOUND";
                 let isError = false;
                 let opt = result;
@@ -39,7 +39,7 @@ const vehicle = {
             });
         }
     },
-    edit: (req, vid, type, cb) => {
+    edit: (vid, type, cb) => {
 
         roleplaydb.query(`INSERT INTO ingameaction (vid, type) VALUES (?, ?)`, [vid, type],  (err) => {
             if(err) {

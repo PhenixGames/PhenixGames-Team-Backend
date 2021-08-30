@@ -11,10 +11,11 @@ const { banplayer } = require("./banplayer");
  */
 const editPlayer = {
     edit: (pid, type, cb) => {
-        if (type == 2) {
+        if (type === 2) {
             banplayer.ban(pid, (response) => {
                 return cb(response);
             });
+            return;
         }
         roleplaydb.query(`INSERT INTO ingameaction (pid, type) VALUES (?, ?)`, [
             pid, type
