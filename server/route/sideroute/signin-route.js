@@ -29,8 +29,8 @@ module.exports = (app, teamroute) => {
             });
             if(err) {return;}
             teamSignin.signIn(res, req.body.teamid, req.body.password, (response) => {
-                if(response) {
-                    res.status(Status.STATUS_OK).json(true).end();
+                if(response !== false) {
+                    res.status(Status.STATUS_ACCEPTED).json(response).end();
                     return;
                 }else {
                     err = true;
