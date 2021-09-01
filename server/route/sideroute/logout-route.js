@@ -3,21 +3,10 @@ const Status = require('../../config/status.json');
 const nconf = require('nconf');
 const logout = require(`../../../api/team/${nconf.get('apiv')}/logout/team-logout`);
 const getuser = require(`../../../api/team/${nconf.get('apiv')}/getuser/getuser`);
-const { verifycookie } = require(`../../../api/team/${nconf.get('apiv')}/getuser/verifycookie`);
+const {verifyToken} = require('../../middleware/auth');
 
 module.exports = (app, teamroute) => {
-    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:login:logout'), async (req, res) => {
-
-        verifycookie.verify(req, (response) => {
-            if(!response) {
-                let status = Status.STATUS_UNAUTHORIZED;
-                let code = "RES_NO_AUTHORIZED";
-                let isError = true;
-                let errormessage = setErrorMessage([status, code, isError]);
-                res.status(errormessage.status).json(errormessage).end();
-                return;
-            }
-        });
+    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:login:logout'), verifyToken, async (req, res) => {
 
         getuser.getUser(req, true, async (result) => {
             if (result !== true) {
