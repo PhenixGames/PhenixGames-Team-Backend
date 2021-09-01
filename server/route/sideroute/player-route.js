@@ -1,32 +1,51 @@
-const {getPlayer} = require('../../../api/team/player/getplayer');
-const {editPlayer} = require('../../../api/team/player/editplayer');
+const nconf = require('nconf');
+const {getPlayer} = require(`../../../api/team/${nconf.get('apiv')}/player/getplayer`);
+const {editPlayer} = require(`../../../api/team/${nconf.get('apiv')}/player/editplayer`);
+const Status = require('../../config/status.json');
+const log = require('../../../_log');
+const { verifycookie } = require(`../../../api/team/${nconf.get('apiv')}/getuser/verifycookie`);
 
-module.exports = (app, teamroute, nconf, log, Status) => {
-    app.get(teamroute + nconf.get('routing:team:player:getPlayer'), async (req, res) => {
+module.exports = (app, teamroute) => {
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer'), async (req, res) => {
+
+        verifycookie.verify(req, (response) => {
+            if(!response) {
+                let status = Status.STATUS_UNAUTHORIZED;
+                let code = "RES_NO_AUTHORIZED";
+                let isError = true;
+                let errormessage = setErrorMessage([status, code, isError]);
+                res.status(errormessage.status).json(errormessage).end();
+                return;
+            }
+        });
+
+
         log.info(`${
             teamroute + nconf.get('routing:team:player:getPlayer')
         } connected Team with IP: `, req.ip);
 
         getPlayer.get(req, async (result) => {
             var obj = await result;
-            if(!obj) {
-                res.status(Status.STATUS_BAD_REQUEST).json(false);
-                return;
-            }
-            else if (obj == '') {
-                res.status(Status.STATUS_NO_CONTENT).json(false);
-                return;
-            }else {
-                res.status(Status.STATUS_OK).json(obj);
-                return;
-            }
+            res.status(obj.status).json(obj).end();
+            return;
         });
     });
 
-    app.post(teamroute + nconf.get('routing:team:player:editPlayer'), async (req, res) => {
+    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:editPlayer'), async (req, res) => {
+
+        verifycookie.verify(req, (response) => {
+            if(!response) {
+                let status = Status.STATUS_UNAUTHORIZED;
+                let code = "RES_NO_AUTHORIZED";
+                let isError = true;
+                let errormessage = setErrorMessage([status, code, isError]);
+                res.status(errormessage.status).json(errormessage).end();
+                return;
+            }
+        });
 
         log.info(`${
-            teamroute + nconf.get('routing:team:player:getPlayer')
+            teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer')
         } connected Team with IP: `, req.ip);
 
         /**
@@ -37,38 +56,40 @@ module.exports = (app, teamroute, nconf, log, Status) => {
          */
         
         if(req.body.type === 3) {
-            res.status(Status.STATUS_UNAUTHORIZED).json(false);
+            let status = Status.STATUS_UNAUTHORIZED;
+            let code = "RES_NO_DATA";
+            let isError = true;
+            let message = setErrorMessage([status, code, isError]);
+            res.status(message.status).json(message).end();
             return;
         }
 
         editPlayer.edit(req.body.pid, req.body.type, (response) => {
-            if(!response) {
-                res.status(Status.STATUS_BAD_REQUEST).json(false);
-                return;
-            }
-            res.status(Status.STATUS_OK).json(true);
+            res.status(response.status).json(response).end();
             return;
         });
     });
 
-    app.get(teamroute + nconf.get('routing:team:player:getPlayerData'), async (req, res) => {
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayerData'), async (req, res) => {
+
+        verifycookie.verify(req, (response) => {
+            if(!response) {
+                let status = Status.STATUS_UNAUTHORIZED;
+                let code = "RES_NO_AUTHORIZED";
+                let isError = true;
+                let errormessage = setErrorMessage([status, code, isError]);
+                res.status(errormessage.status).json(errormessage).end();
+                return;
+            }
+        });
+
         log.info(`${
-            teamroute + nconf.get('routing:team:player:getPlayer')
+            teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer')
         } connected Team with IP: `, req.ip);
         
         getPlayer.getPlayerData(req.query.pid, req, async (response) => {
-            let result = await response;
-            if(!result) {
-                res.status(Status.STATUS_BAD_REQUEST).json(false);
-                return;
-            }
-            else if(result == '') {
-                res.status(Status.STATUS_NO_CONTENT).json(false);
-                return;
-            } else {
-            res.status(Status.STATUS_OK).json(result);
+            res.status(response.status).json(response).end();
             return;
-            }
         });
     })
 }

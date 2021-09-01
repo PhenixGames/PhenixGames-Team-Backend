@@ -1,5 +1,10 @@
-module.exports = (app, teamroute, nconf, getuser, log, Status) => {
-    app.get(teamroute + nconf.get('routing:team:getuser'), async (req, res) => {
+const Status = require('../../config/status.json');
+const nconf = require('nconf');
+const log = require('../../../_log');
+const getuser = require(`../../../api/team/${nconf.get('apiv')}/getuser/getuser`);
+
+module.exports = (app, teamroute) => {
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:getuser'), async (req, res) => {
         log.info(`${
             teamroute + nconf.get('routing:team:getuser')
         } connected Team with IP: `, req.ip);
@@ -7,13 +12,12 @@ module.exports = (app, teamroute, nconf, getuser, log, Status) => {
         var obj = {};
         getuser.getUser(req, true, async (result) => {
             obj = await result;
-            
-            if (!obj) {
-                res.status(Status.STATUS_NO_CONTENT).json(false);
+            if(obj.teamid) {
+                res.status(Status.STATUS_OK).json(obj).end();
                 return;
             }
-            res.status(Status.STATUS_OK).json(obj);
+            res.status(obj.status).json(obj).end();
+            return;
         });
-
     });
 }

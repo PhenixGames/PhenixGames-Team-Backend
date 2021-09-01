@@ -1,17 +1,13 @@
 const { conn } = require("../../../../server/db/db_website");
-const { getusercookie } = require("../../getuser/getusercookie");
-const { verifycookie } = require("../../getuser/verifycookie");
+const { getusercookie } = require("../getuser/getusercookie");
+const { verifycookie } = require("../getuser/verifycookie");
 const uuid = require('uuid');
 const log = require("../../../../_log");
+const Status = require('../../../../server/config/status.json');
+const setErrorMessage = require("../../../../src/js/setErrorMessage");
 
 const teaminfo = {
     save: (req, message, cb) => {
-        verifycookie.verify(req, (response) => {
-            if(!response) {
-                console.log('cookie: ' + response)
-                return cb(false);
-            }
-        });
 
         let teamid;
         let uid = uuid.v1();
@@ -22,21 +18,33 @@ const teaminfo = {
         getusercookie.returncookie(req, (response) => {
             teamid = response.pg_teamid;
             if(isNaN(teamid)) {
-                return cb(false);
+                let status = Status.STATUS_UNAUTHORIZED;
+                let code = "RES_NO_AUTHORIZED";
+                let isError = true;
+                return cb(setErrorMessage([status, code, isError]));
             }
         });
 
         conn.query(`SELECT username FROM team_user WHERE teamid = ?`, [teamid], (err, result) => {
             if(err) {
                 log.error(__filename, err);
-                return cb(false);
+                let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+                let code = "RES_INTERNAL_ERROR";
+                let isError = true;
+                return cb(setErrorMessage([status, code, isError]));
             }
             conn.query('INSERT INTO team_info (infoid, message, teammember, created_at) VALUES (?, ?, ?, ?)', [uid, message, result[0].username, newdate], (err) => {
                 if(err) {
                     log.error(__filename, err);
-                    return cb(false);
+                    let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+                    let code = "RES_INTERNAL_ERROR";
+                    let isError = true;
+                    return cb(setErrorMessage([status, code, isError]));
                 }
-                return cb(true);
+                let status = Status.STATUS_CREATED;
+                let code = "RES_DATA_SAVED";
+                let isError = false;
+                return cb(setErrorMessage([status, code, isError]));
             });
         });
 
@@ -47,26 +55,33 @@ const teaminfo = {
      * @param {Boolean} type 0 = Get Latest | 1 = Get all
      */
     get: (req, type, cb) => {
-        verifycookie.verify(req, (response) => {
-            if(!response) {
-                return cb(false);
-            }
-        });
 
         conn.query(`SELECT * from team_info ORDER BY id DESC`, (err, result) => {
             if(err) {
                 log.error(__filename, err);
-                return cb(false);
+                let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+                let code = "RES_INTERNAL_ERROR";
+                let isError = true;
+                return cb(setErrorMessage([status, code, isError]));
             }
             if(result == '') {
-                return cb("404");
+                let status = Status.STATUS_NO_CONTENT;
+                let code = "RES_NO_DATA";
+                let isError = true;
+                return cb(setErrorMessage([status, code, isError]));
             }
             if(type == "true") {
-                console.log('123')
-                return cb(result);
+                let status = Status.STATUS_OK;
+                let code = "RES_DATA_FOUND";
+                let isError = true;
+                let opt = result;
+                return cb(setErrorMessage([status, code, isError, opt]));
             }else {
-                console.log('123')
-                return cb(result[0]);
+                let status = Status.STATUS_OK;
+                let code = "RES_DATA_FOUND";
+                let isError = true;
+                let opt = result[0];
+                return cb(setErrorMessage([status, code, isError, opt]));
             }
         });
     }
