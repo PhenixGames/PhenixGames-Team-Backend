@@ -3,12 +3,12 @@ require("../../../../server/init/file.init").fileinit(__filename, "init finished
 //const Status = require('../../../../server/config/status.json');
 const {conn} = require("../../../../server/db/db_website");
 const log = require("../../../../_log");
-const lang = require('../../../../server/config/lang/getLang').getLang();
 const bcryptjs = require('bcryptjs');
 const uuid = require('uuid')
 const nconf = require('nconf');
 const Status = require('../../../../server/config/status.json');
 const { setErrorMessage } = require("../../../../src/js/setErrorMessage");
+const { JWTTOKEN } = require("../../../../src/js/jwttoken");
 
 const teamSignin = {
     validateForm: (teamid, password, cb) => {
@@ -69,15 +69,19 @@ const teamSignin = {
             });
 
             const authkey = await teamSignin.createAuthKey();
-            const hashedAuthKey = await teamSignin.hashAuthKey(authkey);
             teamSignin.insertDBAuthkey(authkey, teamid, (result) => {
                 if (result !== true) {
-                    return cb(result);
+                    return cb(false);
                 }
-            });
-
-            teamSignin.addCookie(res, hashedAuthKey, teamid, (result) => {
-                return cb(result);
+                JWTTOKEN.setToken(authkey, (response) => {
+                    if(!response) {
+                        let status = Status.STATUS_INTERNAL_SERVER_ERROR;
+                        let code ="RES_INTERNAL_ERROR";
+                        let isError = true;
+                        return cb(setErrorMessage([status, code, isError]));
+                    }
+                    return cb(response);
+                });
             });
         });
     },
@@ -110,26 +114,6 @@ const teamSignin = {
     createAuthKey: async () => {
         let authkey = uuid.v4()
         return authkey;
-    },
-    hashAuthKey: async (authkey) => {
-        return await bcryptjs.hash(authkey, nconf.get('bcrypt:saltRounds'));
-    },
-    addCookie: (res, authkey, teamid, cb) => {
-        res.cookie('pg_authkey', authkey, {
-            maxAge: nconf.get('cookie:maxAge'),
-            httpOnly: nconf.get('cookie:httpOnly'),
-            expires: new Date(100000000000),
-            signed: true,
-            sameSite: nconf.get('cookie:sameSite'),
-        });
-        res.cookie('pg_teamid', teamid, {
-            maxAge: nconf.get('cookie:maxAge'),
-            httpOnly: nconf.get('cookie:httpOnly'),
-            expires: new Date(100000000000),
-            signed: true,
-            sameSite: nconf.get('cookie:sameSite'),
-        });
-        return cb(true);
     },
 
     insertDBAuthkey: async (autkey, teamid, cb) => {

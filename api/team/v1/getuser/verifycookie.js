@@ -15,7 +15,6 @@ const verifycookie = {
         }
 
         if(!Validator.toString(authkey)) {
-            console.log('kein string');
             return cb(false);
         }
         if(authkey && teamid) {

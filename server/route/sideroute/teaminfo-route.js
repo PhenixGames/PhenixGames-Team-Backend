@@ -3,21 +3,10 @@ const { teaminfo } = require(`../../../api/team/${nconf.get('apiv')}/teaminfo/te
 const log = require("../../../_log");
 const {body, query} = require('express-validator');
 const Status = require('../../config/status.json');
-const { verifycookie } = require(`../../../api/team/${nconf.get('apiv')}/getuser/verifycookie`);
+const {verifyToken} = require('../../middleware/auth');
 
 module.exports = (app, teamroute) => {
-    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:teaminfo:setteaminfo'), body('teaminfo').isString().trim().escape(), async (req, res) => {
-
-        verifycookie.verify(req, (response) => {
-            if(!response) {
-                let status = Status.STATUS_UNAUTHORIZED;
-                let code = "RES_NO_AUTHORIZED";
-                let isError = true;
-                let errormessage = setErrorMessage([status, code, isError]);
-                res.status(errormessage.status).json(errormessage).end();
-                return;
-            }
-        });
+    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:teaminfo:setteaminfo'), body('teaminfo').isString().trim().escape(), verifyToken, async (req, res) => {
 
         log.info(`${
             teamroute + nconf.get('routing:team:teaminfo:setteaminfo')
@@ -29,18 +18,7 @@ module.exports = (app, teamroute) => {
         });
     });
 
-    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:teaminfo:getteaminfo'), query('q').isBoolean(), async (req, res) => {
-
-        verifycookie.verify(req, (response) => {
-            if(!response) {
-                let status = Status.STATUS_UNAUTHORIZED;
-                let code = "RES_NO_AUTHORIZED";
-                let isError = true;
-                let errormessage = setErrorMessage([status, code, isError]);
-                res.status(errormessage.status).json(errormessage).end();
-                return;
-            }
-        });
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:teaminfo:getteaminfo'), query('q').isBoolean(), verifyToken, async (req, res) => {
         
         log.info(`${
             teamroute + nconf.get('routing:team:teaminfo:setteaminfo')

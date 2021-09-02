@@ -3,21 +3,10 @@ const {getPlayer} = require(`../../../api/team/${nconf.get('apiv')}/player/getpl
 const {editPlayer} = require(`../../../api/team/${nconf.get('apiv')}/player/editplayer`);
 const Status = require('../../config/status.json');
 const log = require('../../../_log');
-const { verifycookie } = require(`../../../api/team/${nconf.get('apiv')}/getuser/verifycookie`);
+const {verifyToken} = require('../../middleware/auth');
 
 module.exports = (app, teamroute) => {
-    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer'), async (req, res) => {
-
-        verifycookie.verify(req, (response) => {
-            if(!response) {
-                let status = Status.STATUS_UNAUTHORIZED;
-                let code = "RES_NO_AUTHORIZED";
-                let isError = true;
-                let errormessage = setErrorMessage([status, code, isError]);
-                res.status(errormessage.status).json(errormessage).end();
-                return;
-            }
-        });
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer'), verifyToken, async (req, res) => {
 
 
         log.info(`${
@@ -31,18 +20,7 @@ module.exports = (app, teamroute) => {
         });
     });
 
-    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:editPlayer'), async (req, res) => {
-
-        verifycookie.verify(req, (response) => {
-            if(!response) {
-                let status = Status.STATUS_UNAUTHORIZED;
-                let code = "RES_NO_AUTHORIZED";
-                let isError = true;
-                let errormessage = setErrorMessage([status, code, isError]);
-                res.status(errormessage.status).json(errormessage).end();
-                return;
-            }
-        });
+    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:editPlayer'), verifyToken, async (req, res) => {
 
         log.info(`${
             teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer')
@@ -70,18 +48,7 @@ module.exports = (app, teamroute) => {
         });
     });
 
-    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayerData'), async (req, res) => {
-
-        verifycookie.verify(req, (response) => {
-            if(!response) {
-                let status = Status.STATUS_UNAUTHORIZED;
-                let code = "RES_NO_AUTHORIZED";
-                let isError = true;
-                let errormessage = setErrorMessage([status, code, isError]);
-                res.status(errormessage.status).json(errormessage).end();
-                return;
-            }
-        });
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayerData'), verifyToken, async (req, res) => {
 
         log.info(`${
             teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:player:getPlayer')
