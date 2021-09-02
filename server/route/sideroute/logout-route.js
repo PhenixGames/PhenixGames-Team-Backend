@@ -16,7 +16,6 @@ module.exports = (app, teamroute) => {
         });
         try {
             logout.teamLogout(res, (response) => {
-                console.log(response)
                 if (response) {
                     res.status(Status.STATUS_OK).json(true).end();
                     return;

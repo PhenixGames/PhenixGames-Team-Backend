@@ -23,7 +23,6 @@ const getuser = {
      */
     async getUser(req, isFrontedRequest, cb) {
         var authkey = jwt.verify(req.headers['x-access-token'], nconf.get('secretKey'));
-        console.log(authkey.data)
         if (authkey) {
             try {
                 conn.query(`SELECT * from team_user where authkey = ?`, [authkey.data], (err, result, fields) => {
@@ -35,7 +34,6 @@ const getuser = {
                         let isError = true;
                         return cb(setErrorMessage([status, code, isError]));
                     }
-                    console.log('123');
                     //Authkey found!
                     if (isFrontedRequest) {
                         //isFrontedRequest, only not secure data will be published
