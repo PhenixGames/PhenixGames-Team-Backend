@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const Status = require('../config/status.json');
-const {setErrorMessage} = require('../../src/js/setErrorMessage');
 const nconf = require('nconf');
 
 const verifyToken = (req, res, next) => {
@@ -11,7 +10,6 @@ const verifyToken = (req, res, next) => {
     try {
         jwt.verify(token, nconf.get('secretKey'));
     }catch(err) {
-        console.log(err);
         return res.status(Status.STATUS_UNAUTHORIZED).json(false).end();
     }
     return next();

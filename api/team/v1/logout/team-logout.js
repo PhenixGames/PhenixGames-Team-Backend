@@ -1,18 +1,9 @@
-const setErrorMessage = require("../../../../src/js/setErrorMessage");
-const log = require("../../../../_log");
-const {removeUserCookie} = require("../getuser/removeUserCookie")
-const Status = require('../../../../server/config/status.json');
+const {removeUserAuthkey} = require("../getuser/removeUserAuthkey")
+
 const logout = {
-    teamLogout: (res, cb) => {
-         removeUserCookie.removeUserCookie(res, async (response) => {
-            if (response) {
-                return cb(await response);
-            }else {
-                let status = Status.STATUS_INTERNAL_SERVER_ERROR;
-                let code = "RES_INTERNAL_ERROR";
-                let isError = true;
-                return cb(setErrorMessage([status, code, isError]));
-            }
+    teamLogout: (token, cb) => {
+        removeUserAuthkey.removeUserAuthkey(token, (response) => {
+            return cb(response);
          });
     }
 }

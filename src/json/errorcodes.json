@@ -5,6 +5,7 @@
     "RES_PASWORD_NOT_CORRECT": "Das Passwort ist falsch.",
     "RES_DATA_SAVED": "Daten wurden erfolgreich gespeichert.",
     "RES_DATA_FOUND": "Es wurden Daten gefunden.",
+    "RES_DATA_UPDATED": "Daten wurden erfolgreich aktualisiert",
     "opt": {
         "RES_NO_TEAMID": "Es wurde keine Teamid übermittelt",
         "RES_LENGTH_TEAMID": "Die Teamid muss mindestens 5 Zeichen lang sein.",
