@@ -4,12 +4,27 @@ const log = require('../../../_log');
 const { verifyToken } = require('../../middleware/auth');
 
 module.exports = (app, teamroute) => {
-    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:apply:getapply'), verifyToken, async (req, res) => {
+    app.get(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:apply:get'), verifyToken, async (req, res) => {
         log.info(`${
-            teamroute + nconf.get('routing:team:apply:getapply')
+            teamroute + nconf.get('routing:team:apply:get')
         } connected Team with IP: `, req.ip);
 
-        apply.getApply((response) => {
+        let bid = ``;
+        if(req.query.bid) {
+            bid = req.query.bid;
+        }
+
+        apply.getApply(req.query.q, bid, (response) => {
+            return res.status(response.status).json(response).end();
+        });
+    });
+
+    app.post(teamroute + '/' + nconf.get('apiv') + nconf.get('routing:team:apply:edit'), verifyToken, async (req, res) => {
+        log.info(`${
+            teamroute + nconf.get('routing:team:apply:edit')
+        } connected Team with IP: `, req.ip);
+
+        apply.editApply(req.body.type, req.body.bid, (response) => {
             return res.status(response.status).json(response).end();
         });
     });
