@@ -34,10 +34,10 @@ const apply = {
     },
     editApply: (type, bid, cb) => {
         /**
-         * @param 0 = Show
-         * @param 1 = accept
-         * @param 2 = deny
-         * @param 3 = delete
+         * @param 1 = Show
+         * @param 2 = accept
+         * @param 3 = deny
+         * @param 4 = delete
          */
 
         if(typeof bid !== 'number') {
@@ -47,7 +47,7 @@ const apply = {
             return cb(setErrorMessage([status, code, isError]));
         }
 
-        if(type == '1' || type == '2' || type == '3') {
+        if(type == '2' || type == '3' || type == '4') {
             apply.checkApply(bid, (response) => {
                 console.log(bid)
                 if(!response) {
