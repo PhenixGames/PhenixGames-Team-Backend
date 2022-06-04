@@ -10,11 +10,15 @@ const codes = require('../json/errorcodes.json');
  */
 module.exports = function setErrorMessage(arr) {
     let rescode = codes[arr[1]];
+    let optcode = codes.opt[arr[3]];
+    if(optcode == undefined) {
+        optcode = arr[3];
+    }
 
     return {
         "status": arr[0],
         "code": `${rescode}`,
         "isError": arr[2],
-        "opt": arr[3]
+        "opt": optcode,
     };
 }

@@ -21,7 +21,7 @@
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
-    "chalk": "^3.0.0",
+    "chalk": "^5.0.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -33,7 +33,7 @@
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
-    "mongoose": "^5.12.13",
+    "mongoose": "^6.3.5",
     "mysql": "^2.18.1",
     "nconf": "^0.11.2",
     "node-html-parser": "^3.3.4",
@@ -48,7 +48,7 @@
     "console-error": "^0.0.4",
     "console-info": "^0.0.5",
     "console-warn": "^0.0.4",
-    "dotenv": "^10.0.0",
+    "dotenv": "^16.0.1",
     "nodemon": "^2.0.7"
   }
 }
