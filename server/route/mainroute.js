@@ -13,4 +13,5 @@ module.exports = (app) => {
     require('./sideroute/player-route')(app, teamroute);
     require('./sideroute/vehicle-route')(app, teamroute);
     require('./sideroute/teaminfo-route')(app, teamroute);
+    require('./sideroute/apply-route')(app, teamroute);
 }

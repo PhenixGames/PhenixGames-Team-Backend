@@ -7,7 +7,7 @@ const bcryptjs = require('bcryptjs');
 const uuid = require('uuid')
 const nconf = require('nconf');
 const Status = require('../../../../server/config/status.json');
-const { setErrorMessage } = require("../../../../src/js/setErrorMessage");
+const setErrorMessage = require("../../../../src/js/setErrorMessage");
 const { JWTTOKEN } = require("../../../../src/js/jwttoken");
 
 const teamSignin = {
@@ -55,15 +55,16 @@ const teamSignin = {
                 let isError = true;
                 return cb([status, code, isError]);
             }
-            dbteamid = result[0].teamid;
-            dbpassword = result[0].password
+            let dbteamid = result[0].teamid;
+            let dbpassword = result[0].password
            
             //check password
-            teamSignin.checkPwd(res, password, dbpassword, dbteamid, (results) => {
-                if(!result){
+            teamSignin.checkPwd(password, dbpassword, dbteamid, (results) => {
+                if(!results){
                     let status = Status.STATUS_NOT_ACCEPTABLE;
                     let code = "RES_PASWORD_NOT_CORRECT";
                     let isError = true;
+                    console.log(status, code, isError)
                     return cb(setErrorMessage([status, code, isError]));
                 }
             });
@@ -86,7 +87,7 @@ const teamSignin = {
         });
     },
 
-    checkPwd: async (res, password, dbpassword, teamid, cb) => {
+    checkPwd: async (password, dbpassword, teamid, cb) => {
         try {
             await bcryptjs.compare(password, dbpassword, async (err, result) => {
                 if (err) {
@@ -97,6 +98,7 @@ const teamSignin = {
                     let isError = true;
                     return cb(setErrorMessage([status, code, isError]));
                 }
+                console.log(result)
                 if (result) {                    
                     return cb(true);
                 }else {

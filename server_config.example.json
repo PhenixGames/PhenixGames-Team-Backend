@@ -1,5 +1,6 @@
 {
   "sessionSecret": "",
+  "secretKey": "",
   "domain": "",
   "port": "",
   "apiv": "",
@@ -55,6 +56,14 @@
       "vehicle": {
         "getVehicle": "/getvehicle",
         "editVehicle": "/editvehicle"
+      },
+      "teaminfo": {
+        "setteaminfo": "/setteaminfo",
+        "getteaminfo": "/getteaminfo"
+      },
+      "apply": {
+        "get": "/applications",
+        "edit": "/editapplication"
       }
     }
   }
