@@ -48,7 +48,7 @@
     "console-error": "^0.0.4",
     "console-info": "^0.0.5",
     "console-warn": "^0.0.4",
-    "dotenv": "^10.0.0",
+    "dotenv": "^16.0.1",
     "nodemon": "^2.0.7"
   }
 }
